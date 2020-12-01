@@ -19,7 +19,7 @@ public class LocalidadRepositoryImpl implements LocalidadRepository{
     private DynamoDBMapper dynamoDBMapper;
 
     @Override
-    public Localidad createLocalidad(Localidad localidad) {
+    public Localidad createLocalidad(Localidad localidad) throws DynamoDBMappingException{
         try{
             dynamoDBMapper.save(localidad);
             return localidad;
@@ -29,7 +29,7 @@ public class LocalidadRepositoryImpl implements LocalidadRepository{
     }
 
     @Override
-    public Localidad getOneLocalidad(String id) {
+    public Localidad getOneLocalidad(String id) throws DynamoDBMappingException{
         try{
             Localidad  localidad = dynamoDBMapper.load(Localidad.class,id);
             return localidad;
@@ -39,7 +39,7 @@ public class LocalidadRepositoryImpl implements LocalidadRepository{
     }
 
     @Override
-    public Localidad updateLocalidad(Localidad localidad) {
+    public Localidad updateLocalidad(Localidad localidad) throws DynamoDBMappingException {
         Map<String, ExpectedAttributeValue> expectedAttributeValueMap = new HashMap<>();
         ExpectedAttributeValue expectedAttributeValue = new ExpectedAttributeValue(new AttributeValue().withS(localidad.getId()));
         expectedAttributeValueMap.put("id", expectedAttributeValue);
@@ -54,17 +54,32 @@ public class LocalidadRepositoryImpl implements LocalidadRepository{
     }
 
     @Override
-    public void deleteLocalidad (String id) {
+    public void deleteLocalidad (String id) throws DynamoDBMappingException{
         try{
-            Localidad localidad = dynamoDBMapper.load(Localidad.class,id);
-            dynamoDBMapper.delete(localidad);
+            Localidad localidad = dynamoDBMapper.load(Localidad.class,id);;
+            if (localidad != null){
+                dynamoDBMapper.delete(localidad);
+            }
+            else{
+                throw new DynamoDBMappingException();
+            }
+            /*
+
+             Optional<Localidad> localidad = getOnePersona(id);
+             if (localidad.isPresent()) {
+                 dynamoDBMapper.delete(localidad.get());
+             }
+             else {
+                 throw new DynamoDBMappingException();
+             }
+             */
         }catch (DynamoDBMappingException e){
             throw new DynamoDBMappingException(e.getMessage());
         }
     }
 
     @Override
-    public List<Localidad> getAllLocalidades() {
+    public List<Localidad> getAllLocalidades() throws DynamoDBMappingException{
         try{
             List<Localidad> localidades = dynamoDBMapper.scan(Localidad.class, new DynamoDBScanExpression());
             return localidades;

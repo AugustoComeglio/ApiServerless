@@ -5,6 +5,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
 import com.api.entities.Autor;
+import com.api.entities.Localidad;
 import com.api.entities.Persona;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -57,8 +58,28 @@ public class AutorRepositoryImpl implements AutorRepository{
     @Override
     public void deleteAutor (String id) throws DynamoDBMappingException {
         try{
-            Autor autor = dynamoDBMapper.load(Autor.class,id);
-            dynamoDBMapper.delete(autor);
+
+            Autor autor = dynamoDBMapper.load(Autor.class,id);;
+            if (autor != null){
+                dynamoDBMapper.delete(autor);
+            }
+            else{
+                throw new DynamoDBMappingException();
+            }
+
+
+            /*
+
+             Optional<Autor> autor = getOnePersona(id);
+             if (autor.isPresent()) {
+                 dynamoDBMapper.delete(autor.get());
+             }
+             else {
+                 throw new DynamoDBMappingException();
+             }
+
+             */
+
         }catch (DynamoDBMappingException e){
             throw new DynamoDBMappingException(e.getMessage());
         }

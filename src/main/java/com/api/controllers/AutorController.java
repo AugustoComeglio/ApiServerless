@@ -2,12 +2,11 @@ package com.api.controllers;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.AmazonWebServiceResponse;
 import com.api.entities.Autor;
-import com.api.entities.Persona;
 import com.api.services.AutorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,7 +34,6 @@ public class AutorController{
 
     @GetMapping("/id")
     public ResponseEntity getOneAutor(@RequestBody String id){
-
         try{
             Autor respuesta = autorService.getOneAutor(id);
             return ResponseEntity.status(HttpStatus.OK).body(respuesta);
