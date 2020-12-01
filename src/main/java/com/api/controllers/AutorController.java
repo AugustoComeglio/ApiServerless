@@ -1,5 +1,7 @@
 package com.api.controllers;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
 import com.api.entities.Autor;
 import com.api.entities.Persona;
 import com.api.services.AutorService;
@@ -8,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -18,53 +21,65 @@ public class AutorController{
     @Autowired
     AutorService autorService;
 
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping()
     public ResponseEntity createAutor(@RequestBody Autor autor){
         try {
             Autor respuesta = autorService.createAutor(autor);
-            return ResponseEntity.status(HttpStatus.OK).body(respuesta);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error. por favor intente mas tarde.\"}");
+            return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
+        }catch (AmazonServiceException e){
+            throw new ResponseStatusException(HttpStatus.valueOf(e.getStatusCode()), e.getMessage(), e);
+        }catch (AmazonClientException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),e);
         }
     }
 
     @GetMapping("/id")
     public ResponseEntity getOneAutor(@RequestBody String id){
-        try {
+
+        try{
             Autor respuesta = autorService.getOneAutor(id);
             return ResponseEntity.status(HttpStatus.OK).body(respuesta);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. por favor intente mas tarde.\"}");
+        }catch (AmazonServiceException e){
+            throw new ResponseStatusException(HttpStatus.valueOf(e.getStatusCode()), e.getMessage(), e);
+        }catch (AmazonClientException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),e);
         }
     }
 
-    @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PutMapping()
     public ResponseEntity updateAutor(@RequestBody Autor autor){
-        try {
+        try{
             Autor respuesta = autorService.updateAutor(autor);
             return ResponseEntity.status(HttpStatus.OK).body(respuesta);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error. por favor intente mas tarde.\"}");
+        }catch (AmazonServiceException e){
+            throw new ResponseStatusException(HttpStatus.valueOf(e.getStatusCode()), e.getMessage(), e);
+        }catch (AmazonClientException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),e);
         }
     }
+
 
     @DeleteMapping("/id")
     public ResponseEntity deleteAutor(@RequestBody String id){
-        try {
+        try{
             autorService.deleteAutor(id);
             return ResponseEntity.status(HttpStatus.OK).body(null);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error. por favor intente mas tarde.\"}");
+        }catch (AmazonServiceException e){
+            throw new ResponseStatusException(HttpStatus.valueOf(e.getStatusCode()), e.getMessage(), e);
+        }catch (AmazonClientException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),e);
         }
     }
 
     @GetMapping("")
     public ResponseEntity getAllAutores(){
-        try {
+        try{
             List<Autor> respuesta = autorService.getAllAutores();
             return ResponseEntity.status(HttpStatus.OK).body(respuesta);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. por favor intente mas tarde.\"}");
+        }catch (AmazonServiceException e){
+            throw new ResponseStatusException(HttpStatus.valueOf(e.getStatusCode()), e.getMessage(), e);
+        }catch (AmazonClientException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),e);
         }
     }
 }

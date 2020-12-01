@@ -1,0 +1,18 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Stack to deploy lambda function through infrastructure as code.
+Parameters:
+Resources:
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: PerosonaServeless
+      Handler: com.api.AWSHandler::handleRequest
+      Role: arn:aws:iam::898036731683:role/RolLambda
+      Code:
+        S3Bucket: bucketpersona
+        S3Key: api-0.0.1-SNAPSHOT-aws.jar
+      Runtime: java11
+      MemorySize: 1024
+      Timeout: 30
+
+

@@ -1,5 +1,8 @@
 package com.api.controllers;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
+import com.api.entities.Autor;
 import com.api.entities.Localidad;
 import com.api.entities.Persona;
 import com.api.services.LocalidadService;
@@ -8,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -19,55 +23,65 @@ public class LocalidadController{
     @Autowired
     LocalidadService localidadService;
 
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping()
     public ResponseEntity createLocalidad(@RequestBody Localidad localidad){
         try {
             Localidad respuesta = localidadService.createLocalidad(localidad);
-            return ResponseEntity.status(HttpStatus.OK).body(respuesta);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error. por favor intente mas tarde.\"}");
+            return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
+        }catch (AmazonServiceException e){
+            throw new ResponseStatusException(HttpStatus.valueOf(e.getStatusCode()), e.getMessage(), e);
+        }catch (AmazonClientException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),e);
         }
     }
 
     @GetMapping("/id")
     public ResponseEntity getOneLocalidad(@RequestBody String id){
-        try {
+        try{
             Localidad respuesta = localidadService.getOneLocalidad(id);
             return ResponseEntity.status(HttpStatus.OK).body(respuesta);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. por favor intente mas tarde.\"}");
+        }catch (AmazonServiceException e){
+            throw new ResponseStatusException(HttpStatus.valueOf(e.getStatusCode()), e.getMessage(), e);
+        }catch (AmazonClientException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),e);
         }
+
     }
 
-    @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PutMapping()
     public ResponseEntity updateLocalidad(@RequestBody Localidad localidad){
-        try {
+        try{
             Localidad respuesta = localidadService.updateLocalidad(localidad);
             return ResponseEntity.status(HttpStatus.OK).body(respuesta);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error. por favor intente mas tarde.\"}");
+        }catch (AmazonServiceException e){
+            throw new ResponseStatusException(HttpStatus.valueOf(e.getStatusCode()), e.getMessage(), e);
+        }catch (AmazonClientException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),e);
         }
     }
 
     @DeleteMapping("/id")
     public ResponseEntity deleteLocalidad(@RequestBody String id){
-        try {
+        try{
             localidadService.deleteLocalidad(id);
             return ResponseEntity.status(HttpStatus.OK).body(null);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error. por favor intente mas tarde.\"}");
+        }catch (AmazonServiceException e){
+            throw new ResponseStatusException(HttpStatus.valueOf(e.getStatusCode()), e.getMessage(), e);
+        }catch (AmazonClientException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),e);
         }
+
     }
 
-    @GetMapping("")
+    @GetMapping()
     public ResponseEntity getAllLocalidades(){
-        try {
+        try{
             List<Localidad> respuesta = localidadService.getAllLocalidades();
             return ResponseEntity.status(HttpStatus.OK).body(respuesta);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. por favor intente mas tarde.\"}");
+        }catch (AmazonServiceException e){
+            throw new ResponseStatusException(HttpStatus.valueOf(e.getStatusCode()), e.getMessage(), e);
+        }catch (AmazonClientException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),e);
         }
     }
-
-
 }
