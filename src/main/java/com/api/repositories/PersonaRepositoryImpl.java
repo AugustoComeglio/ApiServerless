@@ -58,17 +58,14 @@ public class PersonaRepositoryImpl implements PersonaRepository {
     @Override
     public void deletePersona (String id) throws DynamoDBMappingException{
         try{
-            /*
-            Persona persona = dynamoDBMapper.load(Persona.class,id);;
-            if (persona != null){
+            Persona persona = dynamoDBMapper.load(Persona.class,id);
+                if ( persona != null){
                 dynamoDBMapper.delete(persona);
-            }
-            else{
-                throw new DynamoDBMappingException();
-            }
+                } else {
+                    throw new DynamoDBMappingException();
+                }
 
-             */
-
+            /*
              Optional<Persona> persona = Optional.ofNullable(getOnePersona(id));
              if (persona.isPresent()) {
                  dynamoDBMapper.delete(persona.get());
@@ -76,7 +73,7 @@ public class PersonaRepositoryImpl implements PersonaRepository {
              else {
                  throw new DynamoDBMappingException();
              }
-
+*/
         }catch (DynamoDBMappingException e){
             throw new DynamoDBMappingException(e.getMessage());
         }

@@ -1,18 +1,18 @@
-AWSTemplateFormatVersion: "2010-09-09"
-Description: Stack to deploy lambda function through infrastructure as code.
-Parameters:
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
 Resources:
-  LambdaFunction:
-    Type: AWS::Lambda::Function
+  function:
+    Type: AWS::Serverless::Function
     Properties:
-      FunctionName: PerosonaServeless
+      CodeUri: target/api-0.0.1-SNAPSHOT-aws.jar
       Handler: com.api.AWSHandler::handleRequest
-      Role: arn:aws:iam::898036731683:role/RolLambda
-      Code:
-        S3Bucket: bucketpersona
-        S3Key: api-0.0.1-SNAPSHOT-aws.jar
       Runtime: java11
       MemorySize: 1024
       Timeout: 30
-
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSLambdaReadOnlyAccess
+        - AWSXrayWriteOnlyAccess
+        - AWSLambdaVPCAccessExecutionRole
+      Tracing: Active
 
