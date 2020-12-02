@@ -14,7 +14,6 @@ import java.util.List;
 @Setter
 @DynamoDBDocument
 public class Libro {
-	;
 
 	@DynamoDBAttribute(attributeName = "fecha")
 	private int fecha;

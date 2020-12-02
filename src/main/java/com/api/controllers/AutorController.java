@@ -3,6 +3,8 @@ package com.api.controllers;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.AmazonWebServiceResponse;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMappingException;
+import com.amazonaws.services.dynamodbv2.model.AmazonDynamoDBException;
 import com.api.entities.Autor;
 import com.api.services.AutorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +24,17 @@ public class AutorController{
 
     @PostMapping()
     public ResponseEntity createAutor(@RequestBody Autor autor){
+
         try {
             Autor respuesta = autorService.createAutor(autor);
             return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
-        }catch (AmazonServiceException e){
+        }catch (AmazonDynamoDBException e){
             throw new ResponseStatusException(HttpStatus.valueOf(e.getStatusCode()), e.getMessage(), e);
         }catch (AmazonClientException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),e);
         }
+
+
     }
 
     @GetMapping("/id")
@@ -37,7 +42,7 @@ public class AutorController{
         try{
             Autor respuesta = autorService.getOneAutor(id);
             return ResponseEntity.status(HttpStatus.OK).body(respuesta);
-        }catch (AmazonServiceException e){
+        }catch (AmazonDynamoDBException e){
             throw new ResponseStatusException(HttpStatus.valueOf(e.getStatusCode()), e.getMessage(), e);
         }catch (AmazonClientException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),e);
@@ -49,7 +54,7 @@ public class AutorController{
         try{
             Autor respuesta = autorService.updateAutor(autor);
             return ResponseEntity.status(HttpStatus.OK).body(respuesta);
-        }catch (AmazonServiceException e){
+        }catch (AmazonDynamoDBException e){
             throw new ResponseStatusException(HttpStatus.valueOf(e.getStatusCode()), e.getMessage(), e);
         }catch (AmazonClientException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),e);
@@ -62,7 +67,7 @@ public class AutorController{
         try{
             autorService.deleteAutor(id);
             return ResponseEntity.status(HttpStatus.OK).body(null);
-        }catch (AmazonServiceException e){
+        }catch (AmazonDynamoDBException e){
             throw new ResponseStatusException(HttpStatus.valueOf(e.getStatusCode()), e.getMessage(), e);
         }catch (AmazonClientException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),e);
@@ -74,7 +79,7 @@ public class AutorController{
         try{
             List<Autor> respuesta = autorService.getAllAutores();
             return ResponseEntity.status(HttpStatus.OK).body(respuesta);
-        }catch (AmazonServiceException e){
+        }catch (AmazonDynamoDBException e){
             throw new ResponseStatusException(HttpStatus.valueOf(e.getStatusCode()), e.getMessage(), e);
         }catch (AmazonClientException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),e);

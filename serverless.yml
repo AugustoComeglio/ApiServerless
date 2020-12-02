@@ -5,6 +5,7 @@ provider:
   runtime: java11
   timeout: 30
   memorySize: 1024
+  region: sa-east-1
 
 package:
   artifact: target/api-0.0.1-SNAPSHOT-aws.jar

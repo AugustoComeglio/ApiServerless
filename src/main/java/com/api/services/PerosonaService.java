@@ -1,18 +1,20 @@
 package com.api.services;
 
 import com.api.entities.Persona;
+import org.json.JSONObject;
+
 import java.util.List;
 
 public interface PerosonaService {
 
-    Persona createPersona(Persona persona);
+    JSONObject createPersona(Persona persona) ;
 
-    Persona getOnePersona(String id);
+    JSONObject getOnePersona(String id);
 
-    Persona updatePersona(Persona persona);
+    JSONObject updatePersona(Persona persona);
 
-    void deletePersona(String id);
+    JSONObject deletePersona(String id);
 
-    List<Persona> getAllPersonas();
+    JSONObject getAllPersonas();
 
 }
